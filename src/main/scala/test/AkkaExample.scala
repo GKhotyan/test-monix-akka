@@ -3,8 +3,6 @@ package test
 import akka.actor.{Actor, ActorRef}
 import akka.util.Timeout
 import com.typesafe.scalalogging.StrictLogging
-
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 class ServiceActorA extends Actor with StrictLogging {
