@@ -19,7 +19,7 @@ object EntryPoint extends StrictLogging {
     implicit val as = ActorSystem()
 
     val serviceA = as.actorOf(Props(new ServiceActorA))
-    val serviceB = as.actorOf(Props(new ServiceActorA))
+    val serviceB = as.actorOf(Props(new ServiceActorB))
     val consumerProps = as.actorOf(Props(new ServiceConsumer(serviceA, serviceB)))
     consumerProps ! StartConsumer
     Thread.sleep(10000)
@@ -35,7 +35,7 @@ object EntryPoint extends StrictLogging {
 
   def main(args: Array[String]): Unit = {
     logger.info("We start!")
-    runAkkaExample()
-    //runMonixExample
+    //runAkkaExample()
+    runMonixExample
   }
 }
