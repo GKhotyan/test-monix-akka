@@ -73,7 +73,7 @@ object AkkaStreamExample extends StrictLogging {
 
   //example with decider
   def runFlowTreeExample():Unit = {
-    val source = Source.fromIterator(() => retrieveData().iterator).
+    val source = Source.fromIterator(() => retrieveData().iterator)
 
     val flow1 = Flow.fromFunction[RequestA, ResponseA](r => ResponseA(r.a.reverse))
     val flow2 = Flow.fromFunction[RequestB, ResponseB](r => ResponseB(r.a.reverse))
