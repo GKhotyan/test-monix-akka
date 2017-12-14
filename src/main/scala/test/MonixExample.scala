@@ -3,9 +3,16 @@ package test
 import com.typesafe.scalalogging.StrictLogging
 import monix.eval.Task
 
+import scala.util.{Failure, Random, Success}
+
 class MonixServiceA {
+  private val random = new Random()
   def requestA(requestA: RequestA): Task[ResponseA] = Task.eval {
-    ResponseA(requestA.a.reverse)
+    if (random.nextInt(10) < 5) {
+      ResponseA(requestA.a.reverse)
+    } else {
+      throw new RuntimeException("DB Failed")
+    }
   }
 }
 
@@ -21,8 +28,13 @@ class MonixServiceConsumer(serviceA: MonixServiceA, serviceB: MonixServiceB) ext
   def start(): Unit = {
     serviceA
       .requestA(RequestA("Hello there", 10))
-      .flatMap { responseA ⇒
-        serviceB.requestB(RequestB(responseA.r, 20))
+      .materialize
+      .flatMap {
+        case Success(responseA) ⇒
+          serviceB.requestB(RequestB(responseA.r, 20))
+
+        case Failure(exception) ⇒
+          serviceB.requestB(RequestB("Another string", 20))
       }
       .map { result ⇒
         logger.info(s"got $result")
